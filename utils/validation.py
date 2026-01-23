@@ -13,17 +13,12 @@ def validate_dataset(df, text, labels):
     if labels not in df.columns:
         raise ValueError(f"Column '{labels}' does not exist in the DataFrame.")
 
-    if not is_numeric_dtype(df[labels]):
+    col = df[labels].dropna().unique()
+    if len(col) != 2:
+        raise ValueError("Column must have exactly 2 unique values")
 
-        col = df[labels].dropna()
-        col = col[col != labels]
-        unique_labels = sorted(col.unique())
-
-        if len(unique_labels) != 2:
-            raise ValueError("Column must have exactly 2 unique values")
-
-        mapping = {unique_labels[0]: -1, unique_labels[1]: 1}
-        df[labels] = df[labels].map(mapping)
+    mapping = {col[0]: -1, col[1]: 1}
+    df[labels] = df[labels].map(mapping)
 
     return df.dropna()
 
