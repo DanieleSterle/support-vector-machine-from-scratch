@@ -1,9 +1,7 @@
-# Import necessary libraries
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
-
 from sklearn.metrics import classification_report
 
 import utils.validation as validation
@@ -16,18 +14,29 @@ if __name__ == "__main__":
     
     args = utils.get_argv()
 
+    # Load and validate dataset + CLI arguments
     df = data.load_data(args.file_path)
     df = validation.validate_dataset(df, args.text, args.labels)
-
     kernel_parameters = validation.validate_arguments(args)
 
-    # Clean the tweets
+    # Text preprocessing
     df[args.text] = df[args.text].apply(criteria.clean_text)
 
-    # Split dataset
+    # Train / test split
     train_df, test_df = data.split_data(df, args.ratio)
 
-    predictions = svm.predict(train_df, test_df, args.text, args.labels, args.kernel, args.C, args.tolerance, args.epochs, kernel_parameters)
+    # Train SVM and generate predictions
+    predictions = svm.predict(
+        train_df,
+        test_df,
+        args.text,
+        args.labels,
+        args.kernel,
+        args.C,
+        args.tolerance,
+        args.epochs,
+        kernel_parameters
+    )
     test_df.insert(1, "prediction", predictions)
 
     print("\n --- --- --- Test set predictions --- --- --- \n")
