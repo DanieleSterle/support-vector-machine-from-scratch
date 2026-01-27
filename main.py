@@ -37,10 +37,10 @@ if __name__ == "__main__":
         args.epochs,
         kernel_parameters
     )
-    test_df.insert(1, "prediction", predictions)
+    test_df["prediction"] = predictions
 
     print("\n --- --- --- Test set predictions --- --- --- \n")
-    print(test_df.head(5))
+    print(test_df[[args.text, args.labels, "prediction"]].sample(10))
     
     print("\n --- --- --- Misclassified samples --- --- --- \n")
     print(test_df[test_df["prediction"] != test_df[args.labels]].head(5))
