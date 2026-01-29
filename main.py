@@ -39,12 +39,14 @@ if __name__ == "__main__":
     )
     test_df["prediction"] = predictions
 
-    print("\n --- --- --- Test set predictions --- --- --- \n")
-    print(test_df[[args.text, args.labels, "prediction"]].sample(10))
-    
-    print("\n --- --- --- Misclassified samples --- --- --- \n")
-    print(test_df[test_df["prediction"] != test_df[args.labels]].head(5))
+    # Display some correctly classified and misclassified samples
+    print("\n --- --- --- Correctly classified samples --- --- --- \n")
+    print(test_df.loc[test_df["prediction"] == test_df[args.labels],[args.text, args.labels, "prediction"]].sample(5))   
 
+    print("\n --- --- --- Misclassified samples --- --- --- \n")
+    print(test_df.loc[test_df["prediction"] != test_df[args.labels],[args.text, args.labels, "prediction"]].sample(5))   
+
+    # Evaluation & metrics
     print("\n --- --- --- Evaluation --- --- --- \n")
     accuracy = np.mean(test_df["prediction"] == test_df[args.labels].values)
     print(f"Test Accuracy: {accuracy:.2f}")
